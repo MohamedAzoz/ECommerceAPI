@@ -57,14 +57,18 @@ namespace ECommerce.API
             builder.Services.AddScoped<IEmailVerification, EmailVerification>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
-            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddHttpClient<IPaymentService, PaymentService>(client =>
+            {
+                client.BaseAddress = new Uri("https://accept.paymob.com/api/");
+            });
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IAddressService, AddressService>();
-            builder.Services.AddScoped<IFileService, FileService>();
+            //builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
-            
+
             #endregion
 
             #region AutoMapper

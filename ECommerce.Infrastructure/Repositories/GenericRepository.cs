@@ -111,7 +111,7 @@ namespace ECommerce.Infrastructure.Repositories
         }
 
         // في الكلاس العام Repository<T>
-        public async Task<Result<IEnumerable<T>>> FindAllWithIncludeAsync(
+        public async Task<Result<ICollection<T>>> FindAllWithIncludeAsync(
             Expression<Func<T, bool>> expression,
             params Expression<Func<T, object>>[] includes)
         {
@@ -133,10 +133,10 @@ namespace ECommerce.Infrastructure.Repositories
             {
                 // يمكنك اختيار إرجاع نجاح بقائمة فارغة بدلاً من فشل، لكن هذا يعتمد على منطقك
                 // هنا سنرجع فشل إذا لم نجد أي شيء مطابق للشرط
-                return Result<IEnumerable<T>>.Failure("No items found matching the criteria.");
+                return Result<ICollection<T>>.Failure("No items found matching the criteria.");
             }
 
-            return Result<IEnumerable<T>>.Success(items);
+            return Result<ICollection<T>>.Success(items);
         }
 
     }

@@ -27,8 +27,8 @@ namespace ECommerce.API.Controllers
         [HttpGet("ViewCart")]
         public async Task<ActionResult> ViewCart()
         {
-            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
                 return NotFound(new { message = "User Cart not found." });
             var result = await cartService.ViewCart(userId);
@@ -48,8 +48,12 @@ namespace ECommerce.API.Controllers
             {
                 return BadRequest(ModelState);
             }
+            //var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return NotFound(new { message = "User Cart not found." });
 
-            var result = await cartService.AddToCart(addToCartDto);
+            var result = await cartService.AddToCart(addToCartDto,userId);
             if (!result.IsSuccess)
             {
                 int statusCode = result.StatusCode ?? 400;
@@ -101,8 +105,8 @@ namespace ECommerce.API.Controllers
         [HttpDelete("ClearItems")]
         public async Task<ActionResult> ClearItems()
         {
-            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
                 return NotFound(new { message = "User Cart not found." });
 

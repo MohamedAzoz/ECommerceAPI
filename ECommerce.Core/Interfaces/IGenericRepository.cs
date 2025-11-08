@@ -16,7 +16,7 @@ namespace ECommerce.Core.Interfaces
         public Task<Result<T>> GetWithIncludeAsync(
             Expression<Func<T, bool>> expression,
             params Expression<Func<T, object>>[] includes);
-        public Task<Result<IEnumerable<T>>> FindAllWithIncludeAsync(
+        public Task<Result<ICollection<T>>> FindAllWithIncludeAsync(
     Expression<Func<T, bool>> expression,
     params Expression<Func<T, object>>[] includes);
     }

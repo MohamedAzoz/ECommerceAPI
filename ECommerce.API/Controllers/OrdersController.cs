@@ -69,11 +69,11 @@ namespace ECommerce.API.Controllers
         [HttpPost("NewOrder")]
         public async Task<ActionResult> NewOrder([FromBody] CreateOrderDto orderDto)
         {
-            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
                 return NotFound("User Cart not found.");
-            var result = await orderService.NewOrder(orderDto , userId);
+            var result = await orderService.NewOrder(orderDto, userId);
             if (!result.IsSuccess)
             {
                 int statusCode = result.StatusCode ?? 400;

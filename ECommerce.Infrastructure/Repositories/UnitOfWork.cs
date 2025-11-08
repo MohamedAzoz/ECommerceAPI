@@ -19,6 +19,7 @@ namespace ECommerce.Infrastructure.Repositories
             Addresses=new AddressRepository(_context);
             CartItems=new GenericRepository<CartItem>(_context);
             OrderItems= new GenericRepository<OrderItem>(_context);
+            ProductImages= new GenericRepository<ProductImage>(_context);
         }
 
         public ICartRepository Carts { get;private set; }
@@ -32,6 +33,8 @@ namespace ECommerce.Infrastructure.Repositories
         public IGenericRepository<CartItem> CartItems { get; private set; }
 
         public IGenericRepository<OrderItem> OrderItems { get; private set; }
+
+        public IGenericRepository<ProductImage> ProductImages { get; private set; }
 
         public async Task<bool> Completed()
         {

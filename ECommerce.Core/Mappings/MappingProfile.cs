@@ -36,7 +36,6 @@ namespace ECommerce.Core.Mappings
 
             CreateMap<AddToCartDto, CartItem>()
                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
-               .ForMember(dest => dest.CartId, opt => opt.MapFrom(src => src.CartId))
                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ReverseMap();
             CreateMap<CartItemDto, CartItem>()
@@ -47,9 +46,10 @@ namespace ECommerce.Core.Mappings
                 .ReverseMap();
 
             CreateMap<CartItem , OrderItem>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
-               .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product))
+               .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Product.Price))
                 .ReverseMap();
 
             CreateMap<UpdateProductDto, Product>()

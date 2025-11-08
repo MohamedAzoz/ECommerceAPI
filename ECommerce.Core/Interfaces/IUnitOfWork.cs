@@ -13,6 +13,7 @@ namespace ECommerce.Core.Interfaces
         public IAddressRepository Addresses { get; }
         public IGenericRepository<CartItem> CartItems { get; }
         public IGenericRepository<OrderItem> OrderItems { get; }
+        public IGenericRepository<ProductImage> ProductImages { get; }
         public Task<bool> Completed();
     }
 }

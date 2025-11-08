@@ -45,7 +45,7 @@ namespace ECommerce.Infrastructure.Services
             {
                 return Result<ICollection<OrderItem>>.Failure($"Orders with ID {id} not found." , 404);
             }
-            var OrderItems = await unitOfWork.OrderItems.FindAllAsync((x) => x.OrderId == id);
+            var OrderItems = await unitOfWork.OrderItems.FindAllWithIncludeAsync((x) => x.OrderId == id,p=>p.Product);
             if (!OrderItems.IsSuccess)
             {
                 return Result<ICollection<OrderItem>>.Success(new List<OrderItem>());
@@ -56,7 +56,7 @@ namespace ECommerce.Infrastructure.Services
         public async Task<Result> NewOrder(CreateOrderDto orderDto,string userId)
         {
             Order order = mapper.Map<Order>(orderDto);
-
+            order.UserId = userId;
             var cartresult = await unitOfWork.Carts.FindAsync(x => x.UserId == userId);
             if (!cartresult.IsSuccess)
             {
@@ -87,6 +87,7 @@ namespace ECommerce.Infrastructure.Services
                 var orderItem = mapper.Map<OrderItem>(item); // تحويل CartItem إلى OrderItem
                 orderItem.OrderId = order.Id;
                 orderItem.Order = order;
+                orderItem.Price = product.Price; // تعيين السعر الحالي للمنتج
 
                 TotalAmount += item.Quantity * orderItem.Price;
 

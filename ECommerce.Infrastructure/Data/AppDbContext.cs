@@ -208,9 +208,17 @@ namespace ECommerce.Infrastructure.Data
                 entity.HasKey(pi => pi.Id);
 
                 // Properties
-                entity.Property(pi => pi.ImageUrl)
+                entity.Property(pi => pi.ImageName)
                     .IsRequired()
-                    .HasMaxLength(500);
+                    .HasMaxLength(50);
+
+                entity.Property(pi => pi.StoredImageName)
+                    .IsRequired()
+                    .HasMaxLength(50); 
+
+                entity.Property(pi => pi.ContentType)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(pi => pi.IsMain)
                     .HasDefaultValue(false);
@@ -340,6 +348,10 @@ namespace ECommerce.Infrastructure.Data
             {
                 // Primary Key
                 entity.HasKey(oi => oi.Id);
+
+                // **تأكد من وجود هذا السطر:**
+                entity.Property(oi => oi.Id)
+                       .ValueGeneratedOnAdd();
 
                 // Properties
                 entity.Property(oi => oi.Quantity)

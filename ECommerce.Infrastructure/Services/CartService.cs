@@ -48,8 +48,14 @@ namespace ECommerce.Infrastructure.Services
         }
 
 
-        public async Task<Result> AddToCart(AddToCartDto addToCartDto) // <==
+        public async Task<Result> AddToCart(AddToCartDto addToCartDto, string userId) // <==
         {
+            var userResult = await unitOfWork.Carts.FindAsync(x => x.UserId == userId);
+            if (!userResult.IsSuccess || userResult.Value.Id == null)
+            {
+                return Result.Failure("User or associated cart not found.", 404);
+            }
+            var cartId = userResult.Value.Id;
             var productResult = await unitOfWork.Products.FindAsync(x => x.Id == addToCartDto.ProductId);
             if (!productResult.IsSuccess)
             {
@@ -61,35 +67,36 @@ namespace ECommerce.Infrastructure.Services
             }
 
             // 2. التأكد من وجود السلة
-            var cartResult = await unitOfWork.Carts.FindAsync(x => x.Id == addToCartDto.CartId);
+            var cartResult = await unitOfWork.Carts.FindAsync(x => x.Id == cartId);
             if (!cartResult.IsSuccess)
             {
                 return Result.Failure("Cart not found.", 404);
             }
 
             var existingItemResult = await unitOfWork.CartItems.FindAsync(
-                x => x.CartId == addToCartDto.CartId && x.ProductId == addToCartDto.ProductId);
+                x => x.CartId == cartId && x.ProductId == addToCartDto.ProductId);
 
             if (existingItemResult.IsSuccess)
             {
                 var existingItem = existingItemResult.Value;
                 existingItem.Quantity += addToCartDto.Quantity;
+                existingItem.CartId=cartId;
 
                 var updateResult = unitOfWork.CartItems.Update(existingItem);
                 if (!updateResult.IsSuccess)
                 {
-                    return Result.Failure(updateResult.Error);
+                    return Result.Failure(updateResult.Error,500);
                 }
             }
             else
             {
                 CartItem cartItem = mapper.Map<CartItem>(addToCartDto);
                 cartItem.Product = productResult.Value; 
-
+                cartItem.CartId= cartId;
                 var addResult = await unitOfWork.CartItems.AddAsync(cartItem);
                 if (!addResult.IsSuccess)
                 {
-                    return Result.Failure(addResult.Error);
+                    return Result.Failure(addResult.Error,500);
                 }
             }
 

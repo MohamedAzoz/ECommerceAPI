@@ -51,14 +51,14 @@ namespace ECommerce.Infrastructure.Services
 
             if (existingCategory.IsSuccess)
             {
-                return Result.Failure("A category with this name already exists.", 500);
+                return Result.Failure("A category with this name already exists.", 400);
             }
 
             Category category = mapper.Map<Category>(categoryDto);
             var AddResult = await unitOfWork.Categories.AddAsync(category);
             if (!AddResult.IsSuccess)
             {
-                return Result.Failure(AddResult.Error);
+                return Result.Failure(AddResult.Error,500);
             }
             await unitOfWork.Completed();
             return Result.Success();
@@ -70,7 +70,7 @@ namespace ECommerce.Infrastructure.Services
             var result = await unitOfWork.Categories.FindAsync((x) => x.Id == id);
             if (!result.IsSuccess)
             {
-                return Result.Failure($"Category with ID {id} not found.", 500);
+                return Result.Failure($"Category with ID {id} not found.", 404);
             }
             var DeleteResult = unitOfWork.Categories.Delete(result.Value);
             if (!DeleteResult.IsSuccess)
